@@ -8,3 +8,8 @@ class User(BaseModel):
 class loginUser(BaseModel):
     email: EmailStr
     password: str
+
+class UserUpdate(BaseModel):
+    username: str | None = None
+    email: str | None = None
+    password: str | None = None
