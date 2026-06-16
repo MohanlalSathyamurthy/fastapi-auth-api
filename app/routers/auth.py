@@ -5,7 +5,7 @@ from app.database.db import get_db
 from app.models.user import User
 from app.schemas.user import User as UserSchema, loginUser
 from app.services.security import hash_password, verify_password
-from app.services.jwt_handler import create_access_token
+from app.services.jwt_handler import create_access_token, verify_access_token
 
 router = APIRouter(tags=["Authentication"])
 
@@ -55,9 +55,18 @@ def login(user: loginUser, db: Session = Depends(get_db)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid email or password"
         )
-    access_token = create_access_token(data={"sub": existing_user.email})
+    access_token = create_access_token(data={"sub": existing_user.email, "username": existing_user.username, "created_at": existing_user.created_at.isoformat(), "id": existing_user.id})
     return {
         'token': access_token,
         'token_type': 'bearer'
     }
-    
+   
+@router.get("/profile")
+def get_profile(token_data: dict = Depends(verify_access_token)):
+  
+    return {
+        'id': token_data.get("id"),
+        'username': token_data.get("username"),
+        'email': token_data.get("sub"),
+        'created_at': token_data.get("created_at")
+    }
