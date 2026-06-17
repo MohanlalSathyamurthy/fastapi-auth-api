@@ -274,6 +274,20 @@ DELETE /user/{user_id}
   "token_type": "bearer"
 }
 ```
+## Docker Setup
+
+* Build Docker Image
+docker build -t fastapi-auth-api .
+
+* Run Docker Container
+docker run --network host --env-file .env fastapi-auth-api
+
+* The application will be available at:
+http://localhost:8000
+
+* Swagger Documentation:
+http://localhost:8000/docs
+
 
 ---
 
